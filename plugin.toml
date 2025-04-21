@@ -1,0 +1,6 @@
+[app]
+include = 'admin'
+
+[api.wecom]
+prefix = '/wecom'
+tags = 'WecomTask'
