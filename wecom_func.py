@@ -1,9 +1,7 @@
 # https://work.weixin.qq.com/api/doc/90000/90136/91770
 
-import requests
+import httpx
 import base64
-import uuid
-import os
 import hashlib
 import pathlib
 
@@ -25,7 +23,7 @@ class WechatWorkWebhook:
                   "mentioned_mobile_list": mentioned_mobile_list
               }
            }
-        return requests.post(self.webhook_url, headers=self.headers, json=data).json()
+        return httpx.post(self.webhook_url, headers=self.headers, json=data).json()
     
     def markdown(self, markdown):
         data = {
@@ -34,7 +32,7 @@ class WechatWorkWebhook:
                   "content": markdown
               }
            }
-        return requests.post(self.webhook_url, headers=self.headers, json=data).json()
+        return httpx.post(self.webhook_url, headers=self.headers, json=data).json()
 
     
     def image(self, image_path):
@@ -49,7 +47,7 @@ class WechatWorkWebhook:
                  "md5": image_md5
               }
            }
-        return requests.post(self.webhook_url, headers=self.headers, json=data).json()
+        return httpx.post(self.webhook_url, headers=self.headers, json=data).json()
     
     def news(self, articles):
         data = {
@@ -58,7 +56,7 @@ class WechatWorkWebhook:
                   "articles": articles
               }
            }
-        return requests.post(self.webhook_url, headers=self.headers, json=data).json()
+        return httpx.post(self.webhook_url, headers=self.headers, json=data).json()
 
     def media(self, media_id):
         data = {
@@ -67,11 +65,11 @@ class WechatWorkWebhook:
                   "media_id": media_id
               }
            }
-        return requests.post(self.webhook_url, headers=self.headers, json=data).json()
+        return httpx.post(self.webhook_url, headers=self.headers, json=data).json()
     
     def upload_media(self, file_path):
         upload_url = self.webhook_url.replace('send', 'upload_media') + '&type=file'
-        return requests.post(upload_url, files=[('media', open(file_path, 'rb'))]).json()  
+        return httpx.post(upload_url, files=[('media', open(file_path, 'rb'))]).json()  
 
     def file(self, file_path):
         media_id = self.upload_media(file_path)['media_id']
