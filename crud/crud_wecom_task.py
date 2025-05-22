@@ -20,7 +20,8 @@ class CRUDWecomTask(CRUDPlus[WecomTask]):
         message_content: str,
         cron_expression: str,
         next_run_time: Optional[datetime] = None,
-        status: int = 1
+        status: int = 1,
+        file_path: Optional[str] = None
     ) -> WecomTask:
         """
         创建企业微信任务
@@ -33,6 +34,7 @@ class CRUDWecomTask(CRUDPlus[WecomTask]):
         :param cron_expression: Cron表达式
         :param next_run_time: 下次运行时间
         :param status: 状态
+        :param file_path: 文件或图片路径
         :return: 创建的任务
         """
         task = WecomTask(
@@ -42,7 +44,8 @@ class CRUDWecomTask(CRUDPlus[WecomTask]):
             cron_expression=cron_expression,
             message_type=message_type,
             next_run_time=next_run_time,
-            status=status
+            status=status,
+            file_path=file_path
         )
         db.add(task)
         await db.commit()

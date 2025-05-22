@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+# Global flag to prevent repeated initialization
+INITIALIZED = False
+
 import asyncio
 import logging
 import os
@@ -14,39 +18,40 @@ if os.path.basename(os.getcwd()) == 'backend':
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-# 初始化插件
-try:
-    # 导入插件配置
+if not INITIALIZED:
+    # 初始化插件
     try:
-        from core.conf import settings
-        from plugin.wecom_task import conf  # noqa
-    except ImportError:
-        from backend.core.conf import settings
-        from backend.plugin.wecom_task import conf  # noqa
-    logging.info("企业微信插件配置已加载")
+        # 导入插件配置
+        try:
+            from core.conf import settings
+            from plugin.wecom_task import conf  # noqa
+        except ImportError:
+            from backend.core.conf import settings
+            from backend.plugin.wecom_task import conf  # noqa
+        logging.info("企业微信插件配置已加载")
 
-    # 导入插件的Celery实例
-    try:
-        from plugin.wecom_task.celery import celery_app  # noqa
-    except ImportError:
-        from backend.plugin.wecom_task.celery import celery_app  # noqa
-    logging.info("企业微信插件Celery实例已加载")
+        # 导入插件的Celery实例
+        try:
+            from plugin.wecom_task.celery import celery_app  # noqa
+        except ImportError:
+            from backend.plugin.wecom_task.celery import celery_app  # noqa
+        logging.info("企业微信插件Celery实例已加载")
 
-    # 导入任务模块，确保任务被注册
-    try:
-        from plugin.wecom_task.service import tasks  # noqa
-    except ImportError:
-        from backend.plugin.wecom_task.service import tasks  # noqa
-    logging.info("企业微信插件任务已加载")
+        # 导入任务模块，确保任务被注册
+        try:
+            from plugin.wecom_task.service import tasks  # noqa
+        except ImportError:
+            from backend.plugin.wecom_task.service import tasks  # noqa
+        logging.info("企业微信插件任务已加载")
 
-    # 手动触发一次任务检查，确保它能正常工作
-    try:
-        result = celery_app.send_task('wecom_check_due_tasks')
-        logging.info(f"手动触发企业微信任务成功，任务ID: {result.id}")
+        # 手动触发一次任务检查，确保它能正常工作
+        try:
+            result = celery_app.send_task('wecom_check_due_tasks')
+            logging.info(f"手动触发企业微信任务成功，任务ID: {result.id}")
+        except Exception as e:
+            logging.warning(f"手动触发企业微信任务失败: {str(e)}")
     except Exception as e:
-        logging.warning(f"手动触发企业微信任务失败: {str(e)}")
-except Exception as e:
-    logging.warning(f"加载企业微信插件失败: {str(e)}")
+        logging.warning(f"加载企业微信插件失败: {str(e)}")
 
 
 # 异步初始化函数
@@ -82,10 +87,12 @@ def init():
 
 
 # 在插件加载时执行初始化
-try:
-    # 执行数据库初始化
-    init()
-    logging.info("企业微信插件初始化完成")
-except Exception as e:
-    logging.error(f"企业微信插件初始化失败: {str(e)}")
-    
+if not INITIALIZED:
+    try:
+        # 执行数据库初始化
+        init()
+        logging.info("企业微信插件初始化完成")
+    except Exception as e:
+        logging.error(f"企业微信插件初始化失败: {str(e)}")
+
+    INITIALIZED = True

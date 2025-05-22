@@ -128,6 +128,30 @@ def execute_wecom_task(task_id: int) -> dict:
                 result = webhook.text(task.message_content)
             elif task.message_type == "markdown":
                 result = webhook.markdown(task.message_content)
+            elif task.message_type == "image":
+                if not task.file_path:
+                    logger.error(f"任务 {task.name} (ID: {task.id}) 类型为image，但file_path为空")
+                    return {"success": False, "message": "Image message type requires a file_path."}
+                try:
+                    result = webhook.image(task.file_path)
+                except FileNotFoundError:
+                    logger.error(f"任务 {task.name} (ID: {task.id}) image file not found: {task.file_path}")
+                    return {"success": False, "message": f"Image file not found: {task.file_path}"}
+                except Exception as e:
+                    logger.error(f"任务 {task.name} (ID: {task.id}) failed to send image: {str(e)}")
+                    return {"success": False, "message": f"Failed to send image: {str(e)}"}
+            elif task.message_type == "file":
+                if not task.file_path:
+                    logger.error(f"任务 {task.name} (ID: {task.id}) 类型为file，但file_path为空")
+                    return {"success": False, "message": "File message type requires a file_path."}
+                try:
+                    result = webhook.file(task.file_path)
+                except FileNotFoundError:
+                    logger.error(f"任务 {task.name} (ID: {task.id}) file not found: {task.file_path}")
+                    return {"success": False, "message": f"File not found: {task.file_path}"}
+                except Exception as e:
+                    logger.error(f"任务 {task.name} (ID: {task.id}) failed to send file: {str(e)}")
+                    return {"success": False, "message": f"Failed to send file: {str(e)}"}
             else:
                 # 默认使用文本类型
                 logger.warning(f"未知的消息类型 {task.message_type}，使用默认文本类型")

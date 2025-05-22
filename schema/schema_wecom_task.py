@@ -17,6 +17,7 @@ class WecomTaskBase(BaseModel):
 class WecomTaskCreate(WecomTaskBase):
     """创建企业微信任务模型"""
     schedule_time: str = Field(..., description="定时时间，格式为cron表达式或者自然语言(如：每天9点)")
+    file_path: str | None = None
 
 
 class WecomTaskUpdate(BaseModel):
@@ -25,6 +26,7 @@ class WecomTaskUpdate(BaseModel):
     webhook_url: Optional[HttpUrl] = Field(None, description="企业微信群机器人Webhook地址")
     message_type: Optional[str] = Field(None, description="消息类型(text, markdown, image等)")
     message_content: Optional[str] = Field(None, description="消息内容")
+    file_path: str | None = None
     schedule_time: Optional[str] = Field(None, description="定时时间，格式为cron表达式或者自然语言(如：每天9点)")
     status: Optional[int] = Field(None, description="状态(0停用 1正常)")
 
@@ -59,3 +61,4 @@ class WecomTaskTest(BaseModel):
     webhook_url: HttpUrl = Field(..., description="企业微信群机器人Webhook地址")
     message_type: str = Field(default="text", description="消息类型(text, markdown, image等)")
     message_content: str = Field(..., description="消息内容")
+    file_path: str | None = None
