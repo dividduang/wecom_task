@@ -8,7 +8,7 @@ from backend.app.task.celery import celery_app
 from backend.database.db import async_db_session
 from backend.plugin.wecom_task.crud.crud_wecom_task import wecom_task_dao
 from backend.plugin.wecom_task.service.schedule_utils import calculate_next_run_time
-from backend.plugin.wecom_task.wecom_func import WechatWorkWebhook
+from backend.plugin.wecom_task.service.wecom_webhook import WechatWorkWebhook
 
 logger = logging.getLogger(__name__)
 

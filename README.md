@@ -14,9 +14,10 @@
 ```使用方法
 timetask.sql
 根目录启动三个
-celery -A backend.app.task.celery flower --port=8555 --basic-auth=admin:123456
-celery -A backend.plugin.wecom_task.celery worker -l info
-celery -A backend.plugin.wecom_task.celery beat -l info
+cd backend
+celery -A app.task.celery flower --port=8555 --basic-auth=admin:123456
+celery -A plugin.wecom_task.celery worker -l info
+celery -A plugin.wecom_task.celery beat -l info
 
 
 ```

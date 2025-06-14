@@ -12,17 +12,4 @@ if os.path.basename(os.getcwd()) == 'backend':
 from .tasks import check_due_tasks, execute_wecom_task
 
 __all__ = ['check_due_tasks', 'execute_wecom_task']
-
-# 注册任务到 Celery
-try:
-    try:
-        from plugin.wecom_task.celery import celery_app
-    except ImportError:
-        from backend.plugin.wecom_task.celery import celery_app
-    
-    celery_app.tasks.register(check_due_tasks)
-    celery_app.tasks.register(execute_wecom_task)
-except Exception as e:
-    import logging
-    logging.getLogger(__name__).error(f"注册任务失败: {str(e)}")
     

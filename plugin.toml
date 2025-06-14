@@ -1,18 +1,8 @@
-# 插件信息
 [plugin]
-summary = '企微群机器人定时任务'
-# 插件版本号
+summary = 'Wecom_Task'
 version = '0.0.1'
-# 插件描述
 description = '企微群机器人定时任务'
-# 插件作者
-author = 'david'
+author = 'DAVID'
 
-# 应用配置
 [app]
-include = 'admin'
-
-# 接口配置
-[api.wecom]
-prefix = '/wecom'
-tags = 'WecomTask'
+router = ['v1']

@@ -73,4 +73,4 @@ class WechatWorkWebhook:
 
     def file(self, file_path):
         media_id = self.upload_media(file_path)['media_id']
-        return self.media(media_id)
+        return self.media(media_id) 

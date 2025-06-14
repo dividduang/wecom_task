@@ -4,11 +4,12 @@ import celery
 import celery_aio_pool
 import logging
 from celery.schedules import crontab
+from functools import lru_cache
 
 from backend.core.conf import settings
 from backend.plugin.wecom_task.conf import task_settings
 
-__all__ = ['celery_app']
+__all__ = ['get_celery_app']
 
 logger = logging.getLogger(__name__)
 
@@ -73,5 +74,6 @@ def init_celery() -> celery.Celery:
     return app
 
 
-# 创建 celery 实例
-celery_app: celery.Celery = init_celery()
+@lru_cache()
+def get_celery_app() -> celery.Celery:
+    return init_celery()
