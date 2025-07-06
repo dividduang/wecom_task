@@ -77,3 +77,7 @@ def init_celery() -> celery.Celery:
 @lru_cache()
 def get_celery_app() -> celery.Celery:
     return init_celery()
+
+
+# 创建一个全局的 Celery 应用实例供命令行使用
+app = get_celery_app()
